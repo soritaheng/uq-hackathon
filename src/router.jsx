@@ -1,17 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./views/Home";
+import Step1 from "./views/Step1";
 import Step2 from "./views/Step2";
 
 //create routes for app
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/step2",
-        element: <Step2 username="iqrapal"/>,
-    },
+  {
+    path: "/step1",
+    element: <Step1 />,
+  },
+  {
+    path: "/step2",
+    element: <Step2 username="Hyunsoo6257" />,
+  },
 ]);
 
 export default router;
