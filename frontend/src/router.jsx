@@ -5,7 +5,7 @@ import Step2 from "./views/Step2";
 //create routes for app
 const router = createBrowserRouter([
   {
-    path: "/step1",
+    path: "/",
     element: <Step1 />,
   },
   {
