@@ -1,14 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./views/Home";
+import Step2 from "./views/Step2";
 
 //create routes for app
 const router = createBrowserRouter([
-<<<<<<< Updated upstream:src/router.jsx
-    {
-        path: "/",
-        element: <Home />,
-    },
-=======
   {
     path: "/",
     element: <Home />,
@@ -17,7 +12,6 @@ const router = createBrowserRouter([
     path: "/step2",
     element: <Step2 username="iqrapal" />,
   },
->>>>>>> Stashed changes:frontend/src/router.jsx
 ]);
 
 export default router;
