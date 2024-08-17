@@ -10,16 +10,6 @@ function Step2() {
   const [checkedItems, setCheckedItems] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (repos && repos.length > 0) {
-      setCheckedItems(repos.map((repo) => repo.id.toString()));
-    } else {
-      return (
-        <p>No repositories found. Please go back and fetch repositories.</p>
-      );
-    }
-  }, [repos]);
-
   const handleNextStep = async () => {
     // Fetch summaries and update repos
     const selectedRepos = await Promise.all(
@@ -52,7 +42,6 @@ function Step2() {
     // Update the context with the selected repos
     setRepos(selectedRepos);
     console.log(selectedRepos); // Logs the updated repos with the 'included' property
-    navigate("/step3");
 
     // Navigate to the next step
     navigate("/step3");
@@ -61,6 +50,10 @@ function Step2() {
   const checkItems = (values) => {
     setCheckedItems(values);
   };
+
+  if (!repos.length) {
+    return <p>No repositories found. Please go back and fetch repositories.</p>;
+  }
 
   return (
     <div className="text-center space-y-10">
