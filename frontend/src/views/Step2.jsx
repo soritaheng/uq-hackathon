@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, username, setUsername } = useContext(RepoContext);
+  const { repos, setRepos, username, setUsername, userDetails, setUserDetails} = useContext(RepoContext); // Include setUsername
   const [checkedItems, setCheckedItems] = useState([]);
   const navigate = useNavigate();
 
@@ -38,6 +38,7 @@ function Step2() {
 
     console.log("Username:", username);
     console.log("Updated Repositories:", selectedRepos);
+    console.log("Updated User Details:", userDetails);
 
     // Update the context with the selected repos
     setRepos(selectedRepos);

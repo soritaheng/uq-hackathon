@@ -9,10 +9,22 @@ import Layout from "./components/Layout";
 function App() {
   const [repos, setRepos] = useState([]);
   const [username, setUsername] = useState([]);
+  const [userDetails, setUserDetails] = useState({
+    Name: "",
+    GitHubName: "",
+    AvatarURL: "",
+    Bio: "",
+    Blog: "",
+  });
+  const [theme, setTheme] = useState({
+    Primary: "#3498db",
+    Secondary: "#2ecc71",
+    Tertiary: "#e74c3c",
+  });
 
   return (
     <div>
-      <RepoContext.Provider value={{ repos, setRepos, username, setUsername }}>
+      <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme }}>
         <Layout>
           <Outlet />
         </Layout>
