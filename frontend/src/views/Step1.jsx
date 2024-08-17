@@ -3,13 +3,33 @@ import { useNavigate } from "react-router-dom";
 import { RepoContext } from "../components/RepoContext";
 import Search from "../assets/search.svg";
 import ButtonPrimary from "../components/ButtonPrimary";
-
+import { useEffect } from "react";
 const Step1 = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [error, setError] = useState("");
-  const { repos, setRepos, username, setUsername, userDetails, setUserDetails, setCurrentStep } = useContext(RepoContext);
+  const { repos, setRepos, username, setUsername, userDetails, setUserDetails, setCurrentStep, accessToken, setAccessToken } = useContext(RepoContext);
   const navigate = useNavigate();
-  const CLIENT_ID = "Ov23li7rGmKa5yU7koL8";
+  const CLIENT_ID = "Ov23libwStbcukGvRNUF";
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        // Making a request to your backend to check for the access token
+        const response = await fetch("http://localhost:3000/github/getAccessToken");
+        const data = await response.json();
+
+        if (data.code) {
+          // If the code is found in the response, exchange it for an access token
+          setAccessToken(code)
+          clearInterval(interval); // Stop further requests once the code is handled
+          fetchData(); 
+        }
+      } catch (error) {
+        console.error("Error fetching code from backend:", error);
+      }
+    }, 2000);
+
+  }, []); 
 
   const fetchData = async () => {
     if (!usernameInput) {
@@ -59,8 +79,9 @@ const Step1 = () => {
     }
   };
 
-  function loginWithGithub(){
-    window.location.assign("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+  function loginWithGithub() {
+    const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID;
+    window.open(GITHUB_AUTH_URL, "_blank", "width=500,height=600");
   }
 
   return (
@@ -82,7 +103,7 @@ const Step1 = () => {
                   onKeyDown={handlePressEnter}
                 />
                 <button
-                  onClick={fetchData}
+                  onClick={loginWithGithub}
                   className="rounded-full bg-primary w-[65px] h-[50px] absolute flex right-0 justify-center items-center"
                 >
                   <img src={Search} alt="" />
