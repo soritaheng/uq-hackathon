@@ -5,26 +5,28 @@ import Search from "../assets/search.svg";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 const Step1 = () => {
-  const [username, setUsername] = useState("");
+  const [usernameInput, setUsernameInput] = useState(""); // Renamed to avoid confusion
   const [error, setError] = useState("");
-  const { setRepos } = useContext(RepoContext); // Extract the setRepos function from RepoContext to update the context
+  const { repos, setRepos, username, setUsername } = useContext(RepoContext); // Include setUsername
+  //const {} = useContext(RepoContext); // Include setUsername
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    if (!username) {
+    if (!usernameInput) {
       setError("Username is required");
       return;
     }
     try {
       const response = await fetch(
-        `http://localhost:3000/github/repos/${username}`
+        `http://localhost:3000/github/repos/${usernameInput}`
       );
       const data = await response.json();
 
       if (response.ok) {
         setRepos(data); // Update the repositories in the context
+        setUsername(usernameInput); // Set the username in the context
         setError("");
-        navigate("/step2");
+        navigate("/step2"); // Redirect to the next step
       } else {
         console.error(data.error || "Failed to fetch repositories");
       }
@@ -45,8 +47,8 @@ const Step1 = () => {
               <div className="relative flex max-w-[400px] m-auto">
                 <input
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value)}
                   placeholder="Enter your GitHub username"
                   className="placeholder:text-primary-400 placeholder:font-light px-4 py-2 border rounded-full border-primary  focus:outline-primary-700 w-full"
                 />
