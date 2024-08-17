@@ -9,6 +9,7 @@ const Step1 = () => {
   const [error, setError] = useState("");
   const { repos, setRepos, username, setUsername, userDetails, setUserDetails, setCurrentStep } = useContext(RepoContext);
   const navigate = useNavigate();
+  const CLIENT_ID = "Ov23li7rGmKa5yU7koL8";
 
   const fetchData = async () => {
     if (!usernameInput) {
@@ -58,6 +59,10 @@ const Step1 = () => {
     }
   };
 
+  function loginWithGithub(){
+    window.location.assign("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+  }
+
   return (
     <div>
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -82,6 +87,12 @@ const Step1 = () => {
                 >
                   <img src={Search} alt="" />
                 </button>
+                <div>
+                  <button onClick={loginWithGithub}>
+                  Login with Github
+                  </button>
+                </div>
+                
               </div>
             </div>
             {error && <p className="text-red-600 mt-4">{error}</p>}

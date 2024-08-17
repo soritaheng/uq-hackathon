@@ -25,6 +25,7 @@ function App() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     if (currentStep === 1 && location.pathname !== "/step1") {
