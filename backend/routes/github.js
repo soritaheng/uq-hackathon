@@ -60,4 +60,32 @@ router.get('/repos/:owner/:repo', async (req, res) => {
   }
 });
 
+router.get("/:username", async function (req, res, next) {
+  try {
+    const username = req.params['username'];
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
+    }
+    const github_url = `https://api.github.com/users/${username}`;
+    const response = await fetch(github_url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("GitHub API Error:", data);
+      return res.status(response.status).json({ error: data.message });
+    }
+    const filteredData = {
+      name: data.name,
+      login: data.login,
+      avatar_url: data.avatar_url,
+      bio: data.bio,
+      blog: data.blog,
+    };
+    res.status(200).json(filteredData);
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;
