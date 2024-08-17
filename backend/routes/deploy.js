@@ -1,29 +1,28 @@
 const express = require("express");
-const crypto = require("crypto");
 const fs = require("fs");
 require("dotenv").config();
 const router = express.Router();
 const path = require("path");
-const token = process.env.GITHUB_API_TOKEN;
 
-async function createOctokitInstance() {
-  const { Octokit } = await import("@octokit/rest");
-  return new Octokit({ auth: token });
-}
-
-const owner = "neeldave9";
-const repo = "portfolio-test-1";
-const branch = "main";
-const filesFolder = path.join(__dirname, "/generated-webapps/5cafc377bcc72fae");
-
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
+
+    const  data  = await req.body;
+
+    async function createOctokitInstance() {
+    const { Octokit } = await import("@octokit/rest");
+    return new Octokit({ auth: data.GITHUB_API_TOKEN});
+    }
+    const owner = data.GITHUB_USERNAME;
+    const repo = `portfolio-${Math.floor(Math.random() * 900) + 100}`;
+    const filesFolder = path.join(__dirname, `/generated-webapps/${data.PROJECT_ID}`);
+
     const octokit = await createOctokitInstance();
 
     const { data: repoData } =
       await octokit.rest.repos.createForAuthenticatedUser({
         name: repo,
-        description: "A web application",
+        description: "My personal coding portfolio website",
         private: false,
       });
 
@@ -66,10 +65,10 @@ router.get("/", async (req, res) => {
       owner: owner,
       repo: repo,
       path: `index.html`,
-      message: "my commit message",
+      message: "My Portfolio Commit!",
       committer: {
-        name: "Neel Dave",
-        email: "neeldave0910@gmail.com",
+        name: data.Name,
+        email: data.GITHUB_EMAIL,
       },
       content: index_base64Content,
       headers: {
@@ -81,10 +80,10 @@ router.get("/", async (req, res) => {
       owner: owner,
       repo: repo,
       path: `style.css`,
-      message: "my commit message",
+      message: "My Portfolio Commit!",
       committer: {
-        name: "Neel Dave",
-        email: "neeldave0910@gmail.com",
+        name: data.Name,
+        email: data.GITHUB_EMAIL,
       },
       content: style_base64Content,
       headers: {
@@ -96,10 +95,10 @@ router.get("/", async (req, res) => {
       owner: owner,
       repo: repo,
       path: `script.js`,
-      message: "my commit message",
+      message: "My Portfolio Commit!",
       committer: {
-        name: "Neel Dave",
-        email: "neeldave0910@gmail.com",
+        name: data.Name,
+        email: data.GITHUB_EMAIL,
       },
       content: script_base64Content,
       headers: {
