@@ -38,15 +38,15 @@ function App() {
 
   return (
     <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme, currentStep, setCurrentStep }}>
-      <Layout>
+        <Layout>
         <Routes>
-          <Route path="/step1" element={<Step1 />} />
+            <Route path="/step1" element={<Step1 />} />
           <Route path="/step2" element={currentStep >= 2 ? <Step2 /> : <Navigate to="/step1" />} />
           <Route path="/step3" element={currentStep >= 3 ? <Step3 /> : <Navigate to="/step1" />} />
           <Route path="/" element={<Navigate to="/step1" />} />
-        </Routes>
-      </Layout>
-    </RepoContext.Provider>
+          </Routes>
+        </Layout>
+      </RepoContext.Provider>
   );
 }
 
