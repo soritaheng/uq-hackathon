@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 import { Stack } from "@chakra-ui/react";
 import { RepoContext } from "../components/RepoContext";
@@ -6,9 +6,59 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, username, setCurrentStep } = useContext(RepoContext);
+  const { repos, setRepos, setCurrentStep, username, setUsername } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+
+  
+
+  useEffect(()=> {
+    console.log(username)
+    fetchData();
+  },[])
+
+  const fetchData = async () => {
+    if (!username) {
+      setError("Username is required");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3000/github/repos/${username}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setRepos(data);
+        setUsername(username);
+        setError("");
+        if (!userDetails || !userDetails.Name) {
+          try {
+            const userResponse = await fetch(`http://localhost:3000/github/${username}`);
+            const userData = await userResponse.json();
+            if (userResponse.ok) {
+              setUserDetails({
+                Name: userData.name || '',
+                GitHubName: userData.login || '',
+                AvatarURL: userData.avatar_url || '',
+                Bio: userData.bio || '',
+                Blog: userData.blog || ''
+              });
+            
+            } else {
+              console.error(userData.error || "Failed to fetch user details");
+            }
+          } catch (err) {
+            console.error("Internal Server Error", err);
+          }
+        }
+      } else {
+        console.error(data.error || "Failed to fetch repositories");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
 
   const handleNextStep = async () => {
     const selectedRepos = await Promise.all(
