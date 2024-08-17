@@ -9,25 +9,27 @@ const Step1 = () => {
   const [error, setError] = useState("");
   const { repos, setRepos, username, setUsername, userDetails, setUserDetails, setCurrentStep, accessToken, setAccessToken } = useContext(RepoContext);
   const navigate = useNavigate();
-  const CLIENT_ID = "Ov23libwStbcukGvRNUF";
+  const CLIENT_ID = "Ov23lituGiC8IRuZp0oJ";
 
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
         // Making a request to your backend to check for the access token
-        const response = await fetch("http://localhost:3000/github/getAccessToken");
+        const response = await fetch("http://localhost:3000/github/code");
         const data = await response.json();
 
-        if (data.code) {
+        if (data) {
+          console.log(data); 
           // If the code is found in the response, exchange it for an access token
-          setAccessToken(code)
+          setAccessToken(data.code);
           clearInterval(interval); // Stop further requests once the code is handled
-          fetchData(); 
+          fetchData();
         }
+        console.log(data)
       } catch (error) {
         console.error("Error fetching code from backend:", error);
       }
-    }, 2000);
+    }, 10000);
 
   }, []); 
 

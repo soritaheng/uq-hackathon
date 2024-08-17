@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const fetch = require('node-fetch');
+const fs = require('fs');
 require('dotenv').config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const CLIENT_ID = "Ov23li7rGmKa5yU7koL8"
-const CLIENT_SECRET = "85b55e2e97e1b7fe64d4accca247e7784d24ba61";
+const CLIENT_ID = "Ov23lituGiC8IRuZp0oJ"
+const CLIENT_SECRET = "59e89abae2ceb4844e9017f39879d08c3daebb68";
 
 router.get("/repos/:username", async function (req, res, next) {
   try {
@@ -90,36 +91,51 @@ router.get("/:username", async function (req, res, next) {
   }
 });
 
-app.get('/getAccessToken', async (req, res) => {
-  const code = req.query.code;
-  const params = "?client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&code="+code;
-  if (!code) {
-    return res.status(400).send('No code provided');
-  }
+router.get('/code', async (req, res) => {
+  fs.readFile('access_token_response.json', 'utf8', (err, data) => {
+    if (err) {
+      if (err.code === 'ENOENT') {
+        // File does not exist
+        return res.status(404).send('access_token_response.json not found');
+      } else {
+        // Some other error occurred
+        console.error('Error reading file', err);
+        return res.status(500).send('Error reading access_token_response.json');
+      }
+    }
+    // If the file exists and was read successfully, send its contents
+    res.send(data);
+  });
+});
 
+router.get('/getAccessToken', async (req, res) => {
   try {
     // Exchange authorization code for access token
-    const response = await axios.post("https://github.com/login/oauth/access_token"+params, {
+    const code = req.query.code
+    const params = "?client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&code="+code;
+    const response = await axios.post("https://github.com/login/oauth/access_token" + params, {
       method: "POST",
       headers: {
         "Accept": "application/json"
       }
-    }).then((response) =>{
-      return response.json();
-    }).then((data) => {
-      console.log()
-      res.json(data);
-    })
-    
-    // const accessToken = response.data.access_token;
+    });
 
-    // // Store the access token in session or local storage
-    // // For demonstration, redirect with token as a query param
-    // res.redirect(`/step1?access_token=${accessToken}`);
+    // Store the response data in a file
+    const data = response.data;
+    
+    fs.writeFile('access_token_response.json', JSON.stringify(data, null, 2), (err) => {
+      if (err) {
+        console.error('Error writing file', err);
+        return res.status(500).json({ error: 'Failed to write file' });
+      }
+      console.log('Response data saved to access_token_response.json');
+      res.json(data);
+    });
   } catch (error) {
-    console.error('Error during authentication:', error);
-    res.status(500).send('Authentication error');
+    console.error('Error during the request', error);
+    res.status(500).json({ error: 'Failed to retrieve access token' });
   }
 });
+
 
 module.exports = router;
