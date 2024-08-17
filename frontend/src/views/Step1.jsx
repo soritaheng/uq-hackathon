@@ -22,7 +22,7 @@ const Step1 = () => {
       if (response.ok) {
         setRepos(data); // Update the repositories in the context
         setError("");
-        navigate("/step3");
+        navigate("/step2");
       } else {
         console.error(data.error || "Failed to fetch repositories");
       }
