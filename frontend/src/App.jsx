@@ -24,7 +24,18 @@ function App() {
 
   return (
     <div>
-      <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme }}>
+      <RepoContext.Provider
+        value={{
+          repos,
+          setRepos,
+          username,
+          setUsername,
+          userDetails,
+          setUserDetails,
+          theme,
+          setTheme,
+        }}
+      >
         <Layout>
           <Outlet />
         </Layout>

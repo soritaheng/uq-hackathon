@@ -6,7 +6,14 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, username, setUsername, userDetails, setUserDetails} = useContext(RepoContext); // Include setUsername
+  const {
+    repos,
+    setRepos,
+    username,
+    setUsername,
+    userDetails,
+    setUserDetails,
+  } = useContext(RepoContext); // Include setUsername
   const [checkedItems, setCheckedItems] = useState([]);
   const navigate = useNavigate();
 
@@ -61,7 +68,7 @@ function Step2() {
       <h1 className="font-bold text-heading text-primary">
         Choose your repositories
       </h1>
-      <div className="max-w-[600px] mx-auto border p-8 border-primary rounded-3xl overflow-y-auto max-h-[600px]">
+      <div className="max-w-[600px] mx-auto border p-8 border-primary rounded-3xl overflow-y-auto max-h-[400px]">
         <CheckboxGroup
           colorScheme="primary"
           value={checkedItems}
