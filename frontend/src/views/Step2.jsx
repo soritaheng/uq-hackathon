@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 import { Stack } from "@chakra-ui/react";
 import { RepoContext } from "../components/RepoContext";
@@ -6,17 +6,65 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, username, setUsername, userDetails, setUserDetails} = useContext(RepoContext); // Include setUsername
+  const { repos, setRepos, setCurrentStep, username, setUsername } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
+  
+
+  useEffect(()=> {
+    console.log(username)
+    fetchData();
+  },[])
+
+  const fetchData = async () => {
+    if (!username) {
+      setError("Username is required");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:3000/github/repos/${username}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setRepos(data);
+        setUsername(username);
+        setError("");
+        if (!userDetails || !userDetails.Name) {
+          try {
+            const userResponse = await fetch(`http://localhost:3000/github/${username}`);
+            const userData = await userResponse.json();
+            if (userResponse.ok) {
+              setUserDetails({
+                Name: userData.name || '',
+                GitHubName: userData.login || '',
+                AvatarURL: userData.avatar_url || '',
+                Bio: userData.bio || '',
+                Blog: userData.blog || ''
+              });
+            
+            } else {
+              console.error(userData.error || "Failed to fetch user details");
+            }
+          } catch (err) {
+            console.error("Internal Server Error", err);
+          }
+        }
+      } else {
+        console.error(data.error || "Failed to fetch repositories");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
+
   const handleNextStep = async () => {
-    // Fetch summaries and update repos
     const selectedRepos = await Promise.all(
       repos.map(async (repo) => {
         if (checkedItems.includes(repo.id.toString())) {
           try {
-            // Fetch summarized description for each selected repo
             const response = await fetch(
               `http://localhost:3000/github/repos/${username}/${repo.name}`
             );
@@ -28,7 +76,7 @@ function Step2() {
             return { ...repo, included: true, summary: data.summary };
           } catch (error) {
             console.error(`Error fetching summary for ${repo.name}:`, error);
-            return { ...repo, included: true }; // Handle error by returning the repo without summary
+            return { ...repo, included: true };
           }
         } else {
           return { ...repo, included: false };
@@ -36,15 +84,8 @@ function Step2() {
       })
     );
 
-    console.log("Username:", username);
-    console.log("Updated Repositories:", selectedRepos);
-    console.log("Updated User Details:", userDetails);
-
-    // Update the context with the selected repos
     setRepos(selectedRepos);
-    console.log(selectedRepos); // Logs the updated repos with the 'included' property
-
-    // Navigate to the next step
+    setCurrentStep(3);
     navigate("/step3");
   };
 
@@ -61,7 +102,7 @@ function Step2() {
       <h1 className="font-bold text-heading text-primary">
         Choose your repositories
       </h1>
-      <div className="max-w-[600px] mx-auto border p-8 border-primary rounded-3xl overflow-y-auto max-h-[600px]">
+      <div className="max-w-[600px] mx-auto border p-8 border-primary rounded-3xl overflow-y-auto max-h-[400px]">
         <CheckboxGroup
           colorScheme="primary"
           value={checkedItems}
@@ -76,10 +117,7 @@ function Step2() {
           </Stack>
         </CheckboxGroup>
       </div>
-      <ButtonPrimary
-        eventHandler={handleNextStep}
-        label={"Next"}
-      ></ButtonPrimary>
+      <ButtonPrimary eventHandler={handleNextStep} label={"Next"} />
     </div>
   );
 }
