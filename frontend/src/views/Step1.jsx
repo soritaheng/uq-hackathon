@@ -3,60 +3,99 @@ import { useNavigate } from "react-router-dom";
 import { RepoContext } from "../components/RepoContext";
 import Search from "../assets/search.svg";
 import ButtonPrimary from "../components/ButtonPrimary";
-
+import { useEffect } from "react";
 const Step1 = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const [error, setError] = useState("");
-  const { repos, setRepos, username, setUsername, userDetails, setUserDetails, setCurrentStep } = useContext(RepoContext);
+  const {
+    repos,
+    setRepos,
+    username,
+    setUsername,
+    userDetails,
+    setUserDetails,
+    setCurrentStep,
+    accessToken,
+    setAccessToken,
+  } = useContext(RepoContext);
   const navigate = useNavigate();
+  const CLIENT_ID = "Ov23lituGiC8IRuZp0oJ";
 
-  const fetchData = async () => {
-    if (!usernameInput) {
-      setError("Username is required");
-      return;
-    }
-    try {
-      const response = await fetch(`http://localhost:3000/github/repos/${usernameInput}`);
-      const data = await response.json();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch("http://localhost:3000/github/code")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Data received:", data); // Debug log to check received data
 
-      if (response.ok) {
-        setRepos(data);
-        setUsername(usernameInput);
-        setError("");
-        if (!userDetails || !userDetails.Name) {
-          try {
-            const userResponse = await fetch(`http://localhost:3000/github/${usernameInput}`);
-            const userData = await userResponse.json();
-            if (userResponse.ok) {
-              setUserDetails({
-                Name: userData.name || '',
-                GitHubName: userData.login || '',
-                AvatarURL: userData.avatar_url || '',
-                Bio: userData.bio || '',
-                Blog: userData.blog || ''
-              });
-              setCurrentStep(2);
-              navigate("/step2");
-            } else {
-              console.error(userData.error || "Failed to fetch user details");
-            }
-          } catch (err) {
-            console.error("Internal Server Error", err);
+          if (data.access_token) {
+            setAccessToken(data.access_token); // Set the access token
+            clearInterval(interval);
+            setCurrentStep(2);
+            navigate("/step2"); // Call fetchData() after setting the access token
           }
-        }
-      } else {
-        console.error(data.error || "Failed to fetch repositories");
-      }
-    } catch (err) {
-      console.error("Internal Server Error", err);
-    }
-  };
+        })
+        .catch((error) => {
+          console.error("Error fetching code from backend:", error);
+        });
+    }, 1000);
+
+    // Cleanup function to clear the interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  // const fetchData = async () => {
+  //   if (!usernameInput) {
+  //     setError("Username is required");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await fetch(`http://localhost:3000/github/repos/${usernameInput}`);
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       setRepos(data);
+  //       setUsername(usernameInput);
+  //       setError("");
+  //       if (!userDetails || !userDetails.Name) {
+  //         try {
+  //           const userResponse = await fetch(`http://localhost:3000/github/${usernameInput}`);
+  //           const userData = await userResponse.json();
+  //           if (userResponse.ok) {
+  //             setUserDetails({
+  //               Name: userData.name || '',
+  //               GitHubName: userData.login || '',
+  //               AvatarURL: userData.avatar_url || '',
+  //               Bio: userData.bio || '',
+  //               Blog: userData.blog || ''
+  //             });
+
+  //           } else {
+  //             console.error(userData.error || "Failed to fetch user details");
+  //           }
+  //         } catch (err) {
+  //           console.error("Internal Server Error", err);
+  //         }
+  //       }
+  //     } else {
+  //       console.error(data.error || "Failed to fetch repositories");
+  //     }
+  //   } catch (err) {
+  //     console.error("Internal Server Error", err);
+  //   }
+  // };
 
   const handlePressEnter = (e) => {
     if (e.key === "Enter") {
-      fetchData();
+      loginWithGithub();
     }
   };
+
+  function loginWithGithub() {
+    const GITHUB_AUTH_URL =
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID;
+    window.open(GITHUB_AUTH_URL, "_blank", "width=500,height=600");
+  }
 
   return (
     <div>
@@ -70,14 +109,15 @@ const Step1 = () => {
               <div className="relative flex max-w-[400px] m-auto">
                 <input
                   type="text"
-                  value={usernameInput}
-                  onChange={(e) => setUsernameInput(e.target.value)}
+                  value={username}
+                  onChange={(e) =>
+                    setUsername(e.target.value)}
                   placeholder="Enter your GitHub username"
                   className="placeholder:text-primary-400 placeholder:font-light px-4 py-2 border rounded-full border-primary focus:outline-primary-700 w-full h-[50px]"
                   onKeyDown={handlePressEnter}
                 />
                 <button
-                  onClick={fetchData}
+                  onClick={loginWithGithub}
                   className="rounded-full bg-primary w-[65px] h-[50px] absolute flex right-0 justify-center items-center"
                 >
                   <img src={Search} alt="" />
