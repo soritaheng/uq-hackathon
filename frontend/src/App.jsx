@@ -36,6 +36,15 @@ function App() {
   //     navigate("/step3");
   //   }
   // }, [currentStep, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (currentStep === 1 && location.pathname !== "/step1") {
+  //     navigate("/step1");
+  //   } else if (currentStep === 2 && location.pathname !== "/step2") {
+  //     navigate("/step2");
+  //   } else if (currentStep === 3 && location.pathname !== "/step3") {
+  //     navigate("/step3");
+  //   }
+  // }, [currentStep, location.pathname, navigate]);
 
   return (
     <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme, currentStep, setCurrentStep, accessToken, setAccessToken }}>

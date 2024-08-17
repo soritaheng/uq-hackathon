@@ -108,11 +108,7 @@ const Step1 = () => {
                 >
                   <img src={Search} alt="" />
                 </button>
-                <div>
-                  <button onClick={loginWithGithub}>
-                  Login with Github
-                  </button>
-                </div>
+                
                 
               </div>
             </div>

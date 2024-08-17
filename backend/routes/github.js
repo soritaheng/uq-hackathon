@@ -6,6 +6,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const CLIENT_ID = "Ov23li7rGmKa5yU7koL8"
+const CLIENT_SECRET = "85b55e2e97e1b7fe64d4accca247e7784d24ba61";
 
 router.get("/repos/:username", async function (req, res, next) {
   try {
@@ -85,6 +87,38 @@ router.get("/:username", async function (req, res, next) {
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get('/getAccessToken', async (req, res) => {
+  const code = req.query.code;
+  const params = "?client_id="+CLIENT_ID+"&client_secret="+CLIENT_SECRET+"&code="+code;
+  if (!code) {
+    return res.status(400).send('No code provided');
+  }
+
+  try {
+    // Exchange authorization code for access token
+    const response = await axios.post("https://github.com/login/oauth/access_token"+params, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json"
+      }
+    }).then((response) =>{
+      return response.json();
+    }).then((data) => {
+      console.log()
+      res.json(data);
+    })
+    
+    // const accessToken = response.data.access_token;
+
+    // // Store the access token in session or local storage
+    // // For demonstration, redirect with token as a query param
+    // res.redirect(`/step1?access_token=${accessToken}`);
+  } catch (error) {
+    console.error('Error during authentication:', error);
+    res.status(500).send('Authentication error');
   }
 });
 
