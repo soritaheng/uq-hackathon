@@ -12,27 +12,29 @@ const Step1 = () => {
   const CLIENT_ID = "Ov23lituGiC8IRuZp0oJ";
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        // Making a request to your backend to check for the access token
-        const response = await fetch("http://localhost:3000/github/code");
-        const data = await response.json();
-
-        if (data) {
-          console.log(data); 
-          // If the code is found in the response, exchange it for an access token
-          setAccessToken(data.code);
-          clearInterval(interval); // Stop further requests once the code is handled
-          fetchData();
-        }
-        console.log(data)
-      } catch (error) {
-        console.error("Error fetching code from backend:", error);
-      }
-    }, 10000);
-
-  }, []); 
-
+    console.log('useEffect triggered'); // Debug log to ensure useEffect is running
+  
+    const interval = setInterval(() => {
+      fetch("http://localhost:3000/github/code")
+        .then(response => response.json())
+        .then(data => {
+          console.log('Data received:', data); // Debug log to check received data
+  
+          if (data.access_token) {
+            setAccessToken(data.access_token); // Set the access token
+            fetchData(); // Call fetchData() after setting the access token
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching code from backend:", error);
+        });
+    }, 1000);
+  
+    // Cleanup function to clear the interval on component unmount
+    return () => clearInterval(interval);
+  
+  }, []);
+  
   const fetchData = async () => {
     if (!usernameInput) {
       setError("Username is required");
