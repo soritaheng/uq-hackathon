@@ -9,15 +9,20 @@ import {
 } from "@chakra-ui/react";
 import CustomInput from "../components/CustomInput";
 import CustomTextarea from "../components/CustomTextarea";
+import ButtonPrimary from "../components/ButtonPrimary";
 import { Select } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 export default function Step3() {
-  const { repos, userDetails, theme } = useContext(RepoContext);
+  const { repos, userDetails, setUserDetails, setRepos, theme } =
+    useContext(RepoContext);
   const [previewUrl, setPreviewUrl] = useState("");
   const [projectIndex, selectProjectIndex] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
-  const [projectUrl, setProjectUrl] = useState("");
   const selectedRepos = repos.filter((repo) => repo.included);
+  const [saveBtnDisabled, setSaveBtnDisabled] = useState(true);
+  const [deployBtnDisabled, setDeployBtnDisabled] = useState(false);
+  const [tempUserDetails, setTempUserDetails] = useState(userDetails);
+  const [tempProjectDetails, setTempProjectDetails] = useState(selectedRepos);
 
   useEffect(() => {
     // Construct the JSON payload
@@ -78,13 +83,18 @@ export default function Step3() {
   }, [repos, userDetails, theme]); // Dependencies to re-run the effect
 
   useEffect(() => {
-    setProjectDescription(selectedRepos[projectIndex].summary);
-    setProjectUrl(selectedRepos[projectIndex].url);
-  }, [projectIndex]);
+    setDeployBtnDisabled(!saveBtnDisabled);
+  }, [saveBtnDisabled]);
+
+  const handleSaveData = () => {
+    setUserDetails(tempUserDetails);
+    setRepos(tempProjectDetails);
+    setSaveBtnDisabled(true);
+  };
 
   return (
     <div>
-      {/* {previewUrl ? (
+      {previewUrl ? (
         <iframe
           src={`http://localhost:3000/${previewUrl}`}
           style={{ width: "100%", height: "500px", border: "none" }}
@@ -92,7 +102,7 @@ export default function Step3() {
         ></iframe>
       ) : (
         <p>Loading preview...</p> // Loading state while waiting for the response
-      )} */}
+      )}
       <div>
         <Accordion allowToggle>
           <AccordionItem>
@@ -104,13 +114,20 @@ export default function Step3() {
             </h2>
             <AccordionPanel pb={4}>
               <div className="space-y-4">
-                {Object.keys(userDetails).map((key) => {
+                {Object.keys(tempUserDetails).map((key) => {
                   return (
                     <div key={key} className="text-left max-w-[350px]">
                       <h3 className="mb-2">{key}</h3>
                       <CustomInput
-                        defaultValue={userDetails[key]}
+                        value={tempUserDetails[key]}
                         placeholder={`Enter ${key}`}
+                        eventHandler={(e) => {
+                          setSaveBtnDisabled(false);
+                          setTempUserDetails((tempUserDetails) => ({
+                            ...tempUserDetails,
+                            ...{ [key]: e.target.value },
+                          }));
+                        }}
                       ></CustomInput>
                     </div>
                   );
@@ -133,25 +150,39 @@ export default function Step3() {
                   value={projectIndex}
                   onChange={(e) => selectProjectIndex(e.target.value)}
                 >
-                  {selectedRepos.map((repo, index) => (
+                  {tempProjectDetails.map((project, index) => (
                     <option key={index} value={index}>
-                      {repo.name}
+                      {project.name}
                     </option>
                   ))}
                 </Select>
                 <div className="text-left max-w-[350px]">
                   <h3 className="mb-2">Description</h3>
                   <CustomTextarea
-                    value={projectDescription}
+                    value={tempProjectDetails[projectIndex].summary}
                     placeholder={"Enter description"}
-                    eventHandler={(e) => setProjectDescription(e.target.value)}
+                    eventHandler={(e) => {
+                      setSaveBtnDisabled(false);
+                      setTempProjectDetails(
+                        tempProjectDetails.map((detail) => {
+                          if (
+                            detail.name ===
+                            tempProjectDetails[projectIndex].name
+                          ) {
+                            return { ...detail, summary: e.target.value };
+                          } else {
+                            return detail;
+                          }
+                        })
+                      );
+                    }}
                   ></CustomTextarea>
                 </div>
                 <div className="text-left max-w-[350px]">
                   <h3 className="mb-2">Link</h3>
                   <CustomInput
                     disabled={true}
-                    value={projectUrl}
+                    value={selectedRepos[projectIndex].url}
                     placeholder={"Enter link"}
                   ></CustomInput>
                 </div>
@@ -170,14 +201,23 @@ export default function Step3() {
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </AccordionPanel>
+            <AccordionPanel pb={4}></AccordionPanel>
           </AccordionItem>
         </Accordion>
+
+        <Button
+          isDisabled={saveBtnDisabled}
+          onClick={handleSaveData}
+          variant="link"
+          colorScheme="primary"
+        >
+          Save
+        </Button>
+        <ButtonPrimary
+          isDisabled={deployBtnDisabled}
+          label={"Deploy"}
+          eventHandler={() => alert("hola")}
+        ></ButtonPrimary>
       </div>
     </div>
   );
