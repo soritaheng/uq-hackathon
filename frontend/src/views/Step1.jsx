@@ -35,6 +35,12 @@ const Step1 = () => {
     }
   };
 
+  const handlePressEnter = (e) => {
+    if (e.key === "Enter") {
+      fetchData();
+    }
+  };
+
   return (
     <div>
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -50,17 +56,18 @@ const Step1 = () => {
                   value={usernameInput}
                   onChange={(e) => setUsernameInput(e.target.value)}
                   placeholder="Enter your GitHub username"
-                  className="placeholder:text-primary-400 placeholder:font-light px-4 py-2 border rounded-full border-primary  focus:outline-primary-700 w-full"
+                  className="placeholder:text-primary-400 placeholder:font-light px-4 py-2 border rounded-full border-primary  focus:outline-primary-700 w-full h-[50px]"
+                  onKeyDown={handlePressEnter}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                <button
+                  onClick={fetchData}
+                  className="rounded-full bg-primary w-[65px] h-[50px] absolute flex right-0 justify-center items-center"
+                >
                   <img src={Search} alt="" />
-                </span>
+                </button>
               </div>
             </div>
             {error && <p className=" text-red-600 mt-4">{error}</p>}
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <ButtonPrimary eventHandler={fetchData} label={"Get started"} />
-            </div>
           </div>
         </div>
       </div>
