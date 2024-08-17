@@ -3,27 +3,28 @@ import { useNavigate } from "react-router-dom";
 import { RepoContext } from "../components/RepoContext";
 
 const Step1 = () => {
-  const [username, setUsername] = useState("");
+  const [usernameInput, setUsernameInput] = useState(""); // Renamed to avoid confusion
   const [error, setError] = useState("");
-  const { setRepos } = useContext(RepoContext); // Extract the setRepos function from RepoContext to update the context
+  const { repos, setRepos,  username, setUsername  } = useContext(RepoContext); // Include setUsername
+  //const {} = useContext(RepoContext); // Include setUsername
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    if (!username) {
+    if (!usernameInput) {
       setError("Username is required");
       return;
     }
     try {
       const response = await fetch(
-        `http://localhost:3000/github/repos/${username}`
+        `http://localhost:3000/github/repos/${usernameInput}`
       );
       const data = await response.json();
 
       if (response.ok) {
         setRepos(data); // Update the repositories in the context
+        setUsername(usernameInput); // Set the username in the context
         setError("");
-        //navigate("/step3");
-        navigate("/step2");
+        navigate("/step2"); // Redirect to the next step
       } else {
         console.error(data.error || "Failed to fetch repositories");
       }
@@ -42,8 +43,8 @@ const Step1 = () => {
             </h1>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)} // Update state with user input
               placeholder="Enter GitHub username"
             />
             {error && <p style={{ color: "red" }}>{error}</p>}
