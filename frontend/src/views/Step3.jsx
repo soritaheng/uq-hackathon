@@ -5,7 +5,7 @@ export default function Step3() {
   const { repos } = useContext(RepoContext);
   return (
     <div>
-      <ul>
+      {/* <ul>
         {repos.map((repo) => (
           <li key={repo.id}>
             <a href={repo.url} target="_blank" rel="noopener noreferrer">
@@ -13,7 +13,13 @@ export default function Step3() {
             </a>
           </li>
         ))}
-      </ul>
+      </ul> */}
+
+    <iframe
+      src={`http://localhost:3000/generate/preview/7768ebc92d687668`}
+      style={{ width: '100%', height: '500px', border: 'none' }}
+      title="Web App Preview"
+    ></iframe>
     </div>
   );
 }

@@ -53,7 +53,7 @@ router.get('/repos/:owner/:repo', async (req, res) => {
     const data = await (response.headers.get('Content-Type')?.includes('json') ? response.json() : response.text());
     const summary = await summarizeText(data);
 
-    res.status(200).json({ summary }); 
+    res.status(200).json({ summary });
   } catch (error) {
     console.error('Error:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
