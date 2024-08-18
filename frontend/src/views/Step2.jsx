@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, setCurrentStep, username, setUsername,userDetails,setUserDetails, accessToken, setAccessToken } = useContext(RepoContext);
+  const { repos, setRepos, setCurrentStep, username, setUsername,userDetails,setUserDetails, accessToken, setAccessToken, email, setEmail } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
   const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
+
   const navigate = useNavigate();
 
 
@@ -21,12 +21,6 @@ function Step2() {
     fetchAccessToken();
     fetchUserEmail();
   },[])
-
-  // useEffect(() => {
-  //   if (accessToken) {
-      
-  //   }
-  // }, []);
 
   const fetchAccessToken = async () => {
     try {

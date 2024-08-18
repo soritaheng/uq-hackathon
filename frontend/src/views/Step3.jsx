@@ -14,7 +14,7 @@ import { Select } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 
 export default function Step3() {
-  const { repos, userDetails, setUserDetails, setRepos, theme } =
+  const { repos, userDetails, setUserDetails, setRepos, theme, email, setEmail } =
     useContext(RepoContext);
   const [previewUrl, setPreviewUrl] = useState("");
   const [projectIndex, selectProjectIndex] = useState(0);
@@ -26,6 +26,7 @@ export default function Step3() {
 
   useEffect(() => {
     // Construct the JSON payload
+    console.log(email)
     const jsonPayload = {
       UserDetails: {
         Name: userDetails.Name,
@@ -33,6 +34,7 @@ export default function Step3() {
         AvatarURL: userDetails.AvatarURL,
         Bio: userDetails.Bio,
         Blog: userDetails.Blog,
+        Email: email,
       },
       Projects: repos
         .filter((repo) => repo.included)
