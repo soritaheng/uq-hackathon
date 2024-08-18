@@ -29,42 +29,59 @@ function App() {
     Tertiary: "#e74c3c",
   });
   const [currentStep, setCurrentStep] = useState(1);
-  const [accessToken, setAccessToken] = useState("")
+  const [accessToken, setAccessToken] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  
 
-  // useEffect(() => {
-  //   if (currentStep === 1 && location.pathname !== "/step1") {
-  //     navigate("/step1");
-  //   } else if (currentStep === 2 && location.pathname !== "/step2") {
-  //     navigate("/step2");
-  //   } else if (currentStep === 3 && location.pathname !== "/step3") {
-  //     navigate("/step3");
-  //   }
-  // }, [currentStep, location.pathname, navigate]);
-  // useEffect(() => {
-  //   if (currentStep === 1 && location.pathname !== "/step1") {
-  //     navigate("/step1");
-  //   } else if (currentStep === 2 && location.pathname !== "/step2") {
-  //     navigate("/step2");
-  //   } else if (currentStep === 3 && location.pathname !== "/step3") {
-  //     navigate("/step3");
-  //   }
-  // }, [currentStep, location.pathname, navigate]);
+  useEffect(() => {
+    if (currentStep === 1 && location.pathname !== "/step1") {
+      navigate("/step1");
+    } else if (currentStep === 2 && location.pathname !== "/step2") {
+      navigate("/step2");
+    } else if (currentStep === 3 && location.pathname !== "/step3") {
+      navigate("/step3");
+    }
+  }, [currentStep, location.pathname, navigate]);
+  useEffect(() => {
+    if (currentStep === 1 && location.pathname !== "/step1") {
+      navigate("/step1");
+    } else if (currentStep === 2 && location.pathname !== "/step2") {
+      navigate("/step2");
+    } else if (currentStep === 3 && location.pathname !== "/step3") {
+      navigate("/step3");
+    }
+  }, [currentStep, location.pathname, navigate]);
 
   return (
-    <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme, currentStep, setCurrentStep, accessToken, setAccessToken }}>
-        <Layout>
+    <RepoContext.Provider
+      value={{
+        repos,
+        setRepos,
+        username,
+        setUsername,
+        userDetails,
+        setUserDetails,
+        theme,
+        setTheme,
+        currentStep,
+        setCurrentStep,
+        accessToken,
+        setAccessToken,
+      }}
+    >
+      <Layout>
         <Routes>
-            <Route path="/step1" element={<Step1 />} />
-            <Route path="/step2" element={<Step2 />} />
+          <Route path="/step1" element={<Step1 />} />
+          <Route path="/step2" element={<Step2 />} />
           {/* <Route path="/step2" element={currentStep >= 2 ? <Step2 /> : <Navigate to="/step1" />} /> */}
-          <Route path="/step3" element={currentStep >= 3 ? <Step3 /> : <Navigate to="/step1" />} />
+          <Route
+            path="/step3"
+            element={currentStep >= 3 ? <Step3 /> : <Navigate to="/step1" />}
+          />
           <Route path="/" element={<Navigate to="/step1" />} />
-          </Routes>
-        </Layout>
-      </RepoContext.Provider>
+        </Routes>
+      </Layout>
+    </RepoContext.Provider>
   );
 }
 
