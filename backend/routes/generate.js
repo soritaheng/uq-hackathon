@@ -23,14 +23,106 @@ router.post("/portfolio", (req, res) => {
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title> ${UserDetails.Name}</title>
+    <style>
+      body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      gap: 30px;
+      padding: 0 30px;
+      justify-content: center;
+      margin: 0;
+      background-color: #000000;
+    }
+    header {
+      position: sticky;
+      max-height: 600px;
+      top: 0;
+      background-color: #1d1d1e;
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: left;
+      margin-top: 68px;
+      width: 30%;
+    }
+    section {
+      color: #fff;
+      width: 70%;
+    }
+
+    .project_list {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .project_header {
+      display: flex;
+    }
+    .project_detail {
+      margin-left: 5%;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
+    
+    .project-image.image-error {
+      background-color: #fff;
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .project_card {
+      min-width: 800px;
+      background-color: #1d1d1e;
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 20px; /* Adds space between cards */
+    }
+    .project_links {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      display: inline-block;
+      background-color: #fff;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .project_links a {
+      text-decoration: none;
+      color: #000;
+      font-size: 16px;
+      font-weight: medium;
+      text-align: center;
+      border: none;
+    }
+    
+    
+    
+    
+    
+    
+    
+    </style>
   </head>
   <body style="background-color: #000000;">
   <header style="border: 1px solid ${Theme.Primary};">
-    <img src="${UserDetails.AvatarURL}" alt="${
-    UserDetails.Name
-  }"  style="width:150px; height:150px; border-radius: 50%;">
+    <img src="${UserDetails.AvatarURL}" alt="${UserDetails.Name
+    }"  style="width:150px; height:150px; border-radius: 50%;">
     <h1>${UserDetails.GitHubName}</h1>
     <p>${UserDetails.Bio}</p>
     <a href="${UserDetails.Blog}" target="_blank">Blog</a>
@@ -39,7 +131,7 @@ router.post("/portfolio", (req, res) => {
     <h1 clss="project_title">Projects</h1>
     <div class="project_list">
       ${Projects.map(
-        (project) => `
+      (project) => `
         <div class="project_card" style="border: 1px solid ${Theme.Primary};">
           <div class="project_header">
           <img class="profile-image" src="${project.Image}" alt="${UserDetails.Name}" style="width: 100px; height:100px; border-radius: 12px;" onerror="this.onerror=null; this.src='default-avatar.png';">
@@ -53,7 +145,7 @@ router.post("/portfolio", (req, res) => {
           </button>
         </div>
       `
-      ).join("")}
+    ).join("")}
 
 </section>
 <script src="script.js"></script>
@@ -63,99 +155,100 @@ router.post("/portfolio", (req, res) => {
 
   `;
 
-  const cssContent = `
-  body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    gap: 30px;
-    padding: 0 30px;
-    justify-content: center;
-    margin: 0;
-    background-color: #000000;
-  }
-  header {
-    position: sticky;
-    max-height: 600px;
-    top: 0;
-    background-color: #1d1d1e;
-    color: #ffffff;
-    border-radius: 20px;
-    padding: 25px;
-    text-align: left;
-    margin-top: 68px;
-    width: 30%;
-  }
-  section {
-    color: #fff;
-    width: 70%;
-  }
+  const cssContent = "";
+  // const cssContent = `
+  // body {
+  //   font-family: Arial, sans-serif;
+  //   display: flex;
+  //   gap: 30px;
+  //   padding: 0 30px;
+  //   justify-content: center;
+  //   margin: 0;
+  //   background-color: #000000;
+  // }
+  // header {
+  //   position: sticky;
+  //   max-height: 600px;
+  //   top: 0;
+  //   background-color: #1d1d1e;
+  //   color: #ffffff;
+  //   border-radius: 20px;
+  //   padding: 25px;
+  //   text-align: left;
+  //   margin-top: 68px;
+  //   width: 30%;
+  // }
+  // section {
+  //   color: #fff;
+  //   width: 70%;
+  // }
 
-  .project_list {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-  
-  .project_header {
-    display: flex;
-  }
-  .project_detail {
-    margin-left: 5%;
-    display: flex;
-    flex-direction: column;
-  }
-  .project-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-right: 20px;
-  }
-  
-  .project-image.image-error {
-    background-color: #fff;
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-  }
-  .project_card {
-    min-width: 800px;
-    background-color: #1d1d1e;
-    color: #ffffff;
-    border-radius: 20px;
-    padding: 20px;
-    text-align: left;
-    margin-bottom: 20px; /* Adds space between cards */
-  }
-  .project_links {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    display: inline-block;
-    background-color: #fff;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 50px;
-    font-size: 16px;
-    margin-top: 20px;
-  }
-  .project_links a {
-    text-decoration: none;
-    color: #000;
-    font-size: 16px;
-    font-weight: medium;
-    text-align: center;
-    border: none;
-  }
-  
-  
-  
-  
-  
-  
-  `;
+  // .project_list {
+  //   width: 100%;
+  //   max-width: 1000px;
+  //   margin: 0 auto;
+  // }
+
+  // .project_header {
+  //   display: flex;
+  // }
+  // .project_detail {
+  //   margin-left: 5%;
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+  // .project-image {
+  //   width: 200px;
+  //   height: 200px;
+  //   object-fit: cover;
+  //   border-radius: 10px;
+  //   margin-right: 20px;
+  // }
+
+  // .project-image.image-error {
+  //   background-color: #fff;
+  //   width: 200px;
+  //   height: 200px;
+  //   object-fit: cover;
+  //   display: block;
+  // }
+  // .project_card {
+  //   min-width: 800px;
+  //   background-color: #1d1d1e;
+  //   color: #ffffff;
+  //   border-radius: 20px;
+  //   padding: 20px;
+  //   text-align: left;
+  //   margin-bottom: 20px; /* Adds space between cards */
+  // }
+  // .project_links {
+  //   background-color: transparent;
+  //   border: none;
+  //   padding: 0;
+  //   display: inline-block;
+  //   background-color: #fff;
+  //   padding: 10px 20px;
+  //   text-align: center;
+  //   text-decoration: none;
+  //   border-radius: 50px;
+  //   font-size: 16px;
+  //   margin-top: 20px;
+  // }
+  // .project_links a {
+  //   text-decoration: none;
+  //   color: #000;
+  //   font-size: 16px;
+  //   font-weight: medium;
+  //   text-align: center;
+  //   border: none;
+  // }
+
+
+
+
+
+
+  // `;
 
   const jsContent = `
     console.log('Web application generated successfully.');

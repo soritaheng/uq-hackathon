@@ -13,6 +13,7 @@ import CustomTextarea from "../components/CustomTextarea";
 import ButtonPrimary from "../components/ButtonPrimary";
 import { Select } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Step3() {
   const {
@@ -25,6 +26,8 @@ export default function Step3() {
     setEmail,
     githubPAT,
     setGithubPAT,
+    resultUrl,
+    setResultUrl,
   } = useContext(RepoContext);
   const [previewUrl, setPreviewUrl] = useState("");
   const [projectIndex, selectProjectIndex] = useState(0);
@@ -34,6 +37,8 @@ export default function Step3() {
   const [tempUserDetails, setTempUserDetails] = useState(userDetails);
   const [tempProjectDetails, setTempProjectDetails] = useState(selectedRepos);
   const [accordionIndex, setAccordionIndex] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const jsonPayload = {
@@ -122,7 +127,9 @@ export default function Step3() {
       }
 
       const result = await response.json();
-      return result.data.html_url; // Return the parsed JSON response
+      // return result.data.html_url; // Return the parsed JSON response
+      setResultUrl(result.data.html_url);
+      navigate("/loading");
     } catch (error) {
       console.error("An error occurred:", error);
       throw error; // Re-throw the error for further handling if needed
@@ -138,7 +145,7 @@ export default function Step3() {
       GITHUB_USERNAME: userDetails.GitHubName,
       GITHUB_EMAIL: email,
       PROJECT_ID: projectID,
-      Name: userDetails.Name,
+      Name: userDetails.Name || "Gitfolio",
     };
     deployPost(deployData);
   };

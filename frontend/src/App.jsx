@@ -12,6 +12,7 @@ import Step1 from "./views/Step1";
 import Step2 from "./views/Step2";
 import Step3 from "./views/Step3";
 import Layout from "./components/Layout";
+import Loading from "./views/Loading";
 
 function App() {
   const [repos, setRepos] = useState([]);
@@ -32,27 +33,28 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const [email, setEmail] = useState("");
   const [githubPAT, setGithubPAT] = useState("");
+  const [resultUrl, setResultUrl] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (currentStep === 1 && location.pathname !== "/step1") {
-      navigate("/step1");
-    } else if (currentStep === 2 && location.pathname !== "/step2") {
-      navigate("/step2");
-    } else if (currentStep === 3 && location.pathname !== "/step3") {
-      navigate("/step3");
-    }
-  }, [currentStep, location.pathname, navigate]);
-  useEffect(() => {
-    if (currentStep === 1 && location.pathname !== "/step1") {
-      navigate("/step1");
-    } else if (currentStep === 2 && location.pathname !== "/step2") {
-      navigate("/step2");
-    } else if (currentStep === 3 && location.pathname !== "/step3") {
-      navigate("/step3");
-    }
-  }, [currentStep, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (currentStep === 1 && location.pathname !== "/step1") {
+  //     navigate("/step1");
+  //   } else if (currentStep === 2 && location.pathname !== "/step2") {
+  //     navigate("/step2");
+  //   } else if (currentStep === 3 && location.pathname !== "/step3") {
+  //     navigate("/step3");
+  //   }
+  // }, [currentStep, location.pathname, navigate]);
+  // useEffect(() => {
+  //   if (currentStep === 1 && location.pathname !== "/step1") {
+  //     navigate("/step1");
+  //   } else if (currentStep === 2 && location.pathname !== "/step2") {
+  //     navigate("/step2");
+  //   } else if (currentStep === 3 && location.pathname !== "/step3") {
+  //     navigate("/step3");
+  //   }
+  // }, [currentStep, location.pathname, navigate]);
 
   return (
     <RepoContext.Provider
@@ -73,6 +75,8 @@ function App() {
         setEmail,
         githubPAT,
         setGithubPAT,
+        resultUrl,
+        setResultUrl,
       }}
     >
       <Layout>
@@ -84,6 +88,7 @@ function App() {
             path="/step3"
             element={currentStep >= 3 ? <Step3 /> : <Navigate to="/step1" />}
           />
+          <Route path="/loading" element={<Loading />} />
           <Route path="/" element={<Navigate to="/step1" />} />
         </Routes>
       </Layout>

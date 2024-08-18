@@ -3,6 +3,7 @@ import App from "./App";
 import Step1 from "./views/Step1";
 import Step2 from "./views/Step2";
 import Step3 from "./views/Step3";
+import Loading from "./views/Loading";
 
 //create routes for app
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/step3",
         element: <Step3 />,
+      },
+      {
+        path: "/loading",
+        element: <Loading />,
       },
     ],
   },
