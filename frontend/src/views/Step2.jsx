@@ -141,6 +141,12 @@ function Step2() {
     setCheckedItems(values);
   };
 
+  const handlePressEnter = (e) => {
+    if (e.key === "Enter") {
+      handleNextStep();
+    }
+  };
+
   if (!repos.length) {
     return <p>No repositories found. Please go back and fetch repositories.</p>;
   }
@@ -155,6 +161,7 @@ function Step2() {
           colorScheme="primary"
           value={checkedItems}
           onChange={checkItems}
+          onKeyDown={handlePressEnter}
         >
           <Stack spacing={1} direction={["column"]}>
             {repos.map((repo) => (

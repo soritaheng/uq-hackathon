@@ -23,14 +23,17 @@ export default function Step3() {
     theme,
     email,
     setEmail,
+    githubPAT,
+    setGithubPAT,
   } = useContext(RepoContext);
   const [previewUrl, setPreviewUrl] = useState("");
   const [projectIndex, selectProjectIndex] = useState(0);
   const selectedRepos = repos.filter((repo) => repo.included);
   const [saveBtnDisabled, setSaveBtnDisabled] = useState(true);
-  const [deployBtnDisabled, setDeployBtnDisabled] = useState(false);
+  const [deployBtnDisabled, setDeployBtnDisabled] = useState(true);
   const [tempUserDetails, setTempUserDetails] = useState(userDetails);
   const [tempProjectDetails, setTempProjectDetails] = useState(selectedRepos);
+  const [accordionIndex, setAccordionIndex] = useState(0);
 
   useEffect(() => {
     const jsonPayload = {
@@ -91,6 +94,10 @@ export default function Step3() {
   }, [repos, userDetails, theme]); // Dependencies to re-run the effect
 
   useEffect(() => {
+    if (!githubPAT) {
+      return setDeployBtnDisabled(true);
+    }
+
     setDeployBtnDisabled(!saveBtnDisabled);
   }, [saveBtnDisabled]);
 
@@ -127,7 +134,7 @@ export default function Step3() {
     const projectID = regexPreviewURL[1];
     console.log(projectID);
     const deployData = {
-      GITHUB_API_TOKEN: "API_TOKEN_HERE",
+      GITHUB_API_TOKEN: githubPAT,
       GITHUB_USERNAME: userDetails.GitHubName,
       GITHUB_EMAIL: email,
       PROJECT_ID: projectID,
@@ -150,7 +157,11 @@ export default function Step3() {
           <p>Loading preview...</p> // Loading state while waiting for the response
         )}
         <div className="w-[30%]">
-          <Accordion allowToggle>
+          <Accordion
+            allowToggle
+            index={accordionIndex}
+            onChange={setAccordionIndex}
+          >
             <AccordionItem>
               <h2>
                 <AccordionButton>
@@ -252,6 +263,22 @@ export default function Step3() {
             </AccordionItem>
           </Accordion>
 
+          <div className="mt-4">
+            <label>
+              Github Personal Access Token
+              <span className="text-red-600">*</span>
+            </label>
+            <CustomInput
+              type={"password"}
+              isRequired={true}
+              value={githubPAT}
+              eventHandler={(e) => {
+                setSaveBtnDisabled(false);
+                setGithubPAT(e.target.value);
+              }}
+            ></CustomInput>
+          </div>
+
           <ButtonGroup spacing={4} className="mt-4">
             <Button
               isDisabled={saveBtnDisabled}
@@ -264,7 +291,7 @@ export default function Step3() {
             <ButtonPrimary
               isDisabled={deployBtnDisabled}
               label={"Deploy"}
-              eventHandler={() => alert("hola")}
+              eventHandler={handleDeployment}
             ></ButtonPrimary>
           </ButtonGroup>
         </div>
