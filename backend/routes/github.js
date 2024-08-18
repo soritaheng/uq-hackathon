@@ -155,4 +155,28 @@ router.get("/:username", async function (req, res, next) {
   }
 });
 
+router.get('/user/emails', async (req, res) => {
+  const accessToken = req.query.access_token;
+
+  try {
+    const response = await fetch('https://api.github.com/user/emails', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return res.status(response.status).json({ error: 'Failed to retrieve emails' });
+    }
+
+    const emails = await response.json();
+    res.status(200).json(emails);
+  } catch (error) {
+    console.error('Error fetching user emails:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;

@@ -30,6 +30,7 @@ function App() {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [accessToken, setAccessToken] = useState("")
+  const [email, setEmail] = useState(""); 
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -54,7 +55,7 @@ function App() {
   // }, [currentStep, location.pathname, navigate]);
 
   return (
-    <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme, currentStep, setCurrentStep, accessToken, setAccessToken }}>
+    <RepoContext.Provider value={{ repos, setRepos, username, setUsername, userDetails, setUserDetails, theme, setTheme, currentStep, setCurrentStep, accessToken, setAccessToken, email, setEmail }}>
         <Layout>
         <Routes>
             <Route path="/step1" element={<Step1 />} />

@@ -93,7 +93,7 @@ const Step1 = () => {
 
   function loginWithGithub() {
     const GITHUB_AUTH_URL =
-      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID;
+      "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID+"&scope=user:email";
     window.open(GITHUB_AUTH_URL, "_blank", "width=500,height=600");
   }
 
