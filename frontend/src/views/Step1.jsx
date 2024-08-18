@@ -22,6 +22,7 @@ const Step1 = () => {
   const CLIENT_ID = "Ov23lituGiC8IRuZp0oJ";
 
   useEffect(() => {
+    deleteAccessToken();
     const interval = setInterval(() => {
       fetch("http://localhost:3000/github/code")
         .then((response) => response.json())
@@ -43,6 +44,24 @@ const Step1 = () => {
     // Cleanup function to clear the interval on component unmount
     return () => clearInterval(interval);
   }, []);
+
+  const deleteAccessToken = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/github/deleteAccessToken', {
+        method: 'POST', // or 'DELETE' if you want to follow REST conventions
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete access token');
+      }
+
+      const data = await response.text(); // If your backend returns plain text
+
+      console.log(data); // Logs 'File deleted successfully'
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   // const fetchData = async () => {
   //   if (!usernameInput) {
