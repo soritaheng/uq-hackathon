@@ -6,6 +6,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import CustomInput from "../components/CustomInput";
 import CustomTextarea from "../components/CustomTextarea";
@@ -93,132 +94,138 @@ export default function Step3() {
   };
 
   return (
-    <div>
-      {previewUrl ? (
-        <iframe
-          src={`http://localhost:3000/${previewUrl}`}
-          style={{ width: "100%", height: "500px", border: "none" }}
-          title="Web App Preview"
-        ></iframe>
-      ) : (
-        <p>Loading preview...</p> // Loading state while waiting for the response
-      )}
-      <div>
-        <Accordion allowToggle>
-          <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <h2>About Me</h2>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <div className="space-y-4">
-                {Object.keys(tempUserDetails).map((key) => {
-                  return (
-                    <div key={key} className="text-left max-w-[350px]">
-                      <h3 className="mb-2">{key}</h3>
-                      <CustomInput
-                        value={tempUserDetails[key]}
-                        placeholder={`Enter ${key}`}
-                        eventHandler={(e) => {
-                          setSaveBtnDisabled(false);
-                          setTempUserDetails((tempUserDetails) => ({
-                            ...tempUserDetails,
-                            ...{ [key]: e.target.value },
-                          }));
-                        }}
-                      ></CustomInput>
-                    </div>
-                  );
-                })}
-              </div>
-            </AccordionPanel>
-          </AccordionItem>
-
-          <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <h2>Projects</h2>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-              <div className="space-y-4">
-                <Select
-                  placeholder="Select project"
-                  value={projectIndex}
-                  onChange={(e) => selectProjectIndex(e.target.value)}
-                >
-                  {tempProjectDetails.map((project, index) => (
-                    <option key={index} value={index}>
-                      {project.name}
-                    </option>
-                  ))}
-                </Select>
-                <div className="text-left max-w-[350px]">
-                  <h3 className="mb-2">Description</h3>
-                  <CustomTextarea
-                    value={tempProjectDetails[projectIndex].summary}
-                    placeholder={"Enter description"}
-                    eventHandler={(e) => {
-                      setSaveBtnDisabled(false);
-                      setTempProjectDetails(
-                        tempProjectDetails.map((detail) => {
-                          if (
-                            detail.name ===
-                            tempProjectDetails[projectIndex].name
-                          ) {
-                            return { ...detail, summary: e.target.value };
-                          } else {
-                            return detail;
-                          }
-                        })
-                      );
-                    }}
-                  ></CustomTextarea>
+    <>
+      <div className="mt-8 flex flex-col lg:flex-row gap-2 lg:gap-4">
+        {previewUrl ? (
+          <iframe
+            src={`http://localhost:3000/${previewUrl}`}
+            style={{ width: "100%", height: "80vh", border: "none" }}
+            title="Web App Preview"
+            className="w-[70%]"
+          ></iframe>
+        ) : (
+          <p>Loading preview...</p> // Loading state while waiting for the response
+        )}
+        <div className="w-[30%]">
+          <Accordion allowToggle>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <h2>About Me</h2>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <div className="space-y-4">
+                  {Object.keys(tempUserDetails).map((key) => {
+                    return (
+                      <div key={key} className="text-left">
+                        <h3 className="mb-2">{key}</h3>
+                        <CustomInput
+                          value={tempUserDetails[key]}
+                          placeholder={`Enter ${key}`}
+                          eventHandler={(e) => {
+                            setSaveBtnDisabled(false);
+                            setTempUserDetails((tempUserDetails) => ({
+                              ...tempUserDetails,
+                              ...{ [key]: e.target.value },
+                            }));
+                          }}
+                        ></CustomInput>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="text-left max-w-[350px]">
-                  <h3 className="mb-2">Link</h3>
-                  <CustomInput
-                    disabled={true}
-                    value={selectedRepos[projectIndex].url}
-                    placeholder={"Enter link"}
-                  ></CustomInput>
+              </AccordionPanel>
+            </AccordionItem>
+
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <h2>Projects</h2>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}>
+                <div className="space-y-4">
+                  <Select
+                    placeholder="Select project"
+                    value={projectIndex}
+                    onChange={(e) => selectProjectIndex(e.target.value)}
+                  >
+                    {tempProjectDetails.map((project, index) => (
+                      <option key={index} value={index}>
+                        {project.name}
+                      </option>
+                    ))}
+                  </Select>
+                  <div className="text-left">
+                    <h3 className="mb-2">Description</h3>
+                    <CustomTextarea
+                      key={projectIndex}
+                      value={tempProjectDetails[projectIndex].summary}
+                      placeholder={"Enter description"}
+                      eventHandler={(e) => {
+                        setSaveBtnDisabled(false);
+                        setTempProjectDetails(
+                          tempProjectDetails.map((detail) => {
+                            if (
+                              detail.name ===
+                              tempProjectDetails[projectIndex].name
+                            ) {
+                              return { ...detail, summary: e.target.value };
+                            } else {
+                              return detail;
+                            }
+                          })
+                        );
+                      }}
+                    ></CustomTextarea>
+                  </div>
+                  <div className="text-left">
+                    <h3 className="mb-2">Link</h3>
+                    <CustomInput
+                      disabled={true}
+                      value={selectedRepos[projectIndex].url}
+                      placeholder={"Enter link"}
+                    ></CustomInput>
+                  </div>
+                  {/* <div className="text-left max-w-[350px]">
+                <h3 className="mb-2">Image</h3>
+                <CustomInput></CustomInput>
+              </div> */}
                 </div>
-                {/* <div className="text-left max-w-[350px]">
-                  <h3 className="mb-2">Image</h3>
-                  <CustomInput></CustomInput>
-                </div> */}
-              </div>
-            </AccordionPanel>
-          </AccordionItem>
+              </AccordionPanel>
+            </AccordionItem>
 
-          <AccordionItem>
-            <h2>
-              <AccordionButton>
-                <h2>Theme</h2>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}></AccordionPanel>
-          </AccordionItem>
-        </Accordion>
+            <AccordionItem>
+              <h2>
+                <AccordionButton>
+                  <h2>Theme</h2>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+              <AccordionPanel pb={4}></AccordionPanel>
+            </AccordionItem>
+          </Accordion>
 
-        <Button
-          isDisabled={saveBtnDisabled}
-          onClick={handleSaveData}
-          variant="link"
-          colorScheme="primary"
-        >
-          Save
-        </Button>
-        <ButtonPrimary
-          isDisabled={deployBtnDisabled}
-          label={"Deploy"}
-          eventHandler={() => alert("hola")}
-        ></ButtonPrimary>
+          <ButtonGroup spacing={4} className="mt-4">
+            <Button
+              isDisabled={saveBtnDisabled}
+              onClick={handleSaveData}
+              variant="link"
+              colorScheme="primary"
+            >
+              Save
+            </Button>
+            <ButtonPrimary
+              isDisabled={deployBtnDisabled}
+              label={"Deploy"}
+              eventHandler={() => alert("hola")}
+            ></ButtonPrimary>
+          </ButtonGroup>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
