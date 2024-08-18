@@ -6,18 +6,23 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, setCurrentStep, username, setUsername } = useContext(RepoContext);
+  const {
+    repos,
+    setRepos,
+    setCurrentStep,
+    username,
+    setUsername,
+    userDetails,
+    setUserDetails,
+  } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
-  
-
-  useEffect(()=> {
-    console.log(username)
+  useEffect(() => {
+    console.log(username);
     fetchData();
-  },[])
+  }, []);
 
   const fetchData = async () => {
     if (!username) {
@@ -25,7 +30,9 @@ function Step2() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:3000/github/repos/${username}`);
+      const response = await fetch(
+        `http://localhost:3000/github/repos/${username}`
+      );
       const data = await response.json();
 
       if (response.ok) {
@@ -34,17 +41,18 @@ function Step2() {
         setError("");
         if (!userDetails || !userDetails.Name) {
           try {
-            const userResponse = await fetch(`http://localhost:3000/github/${username}`);
+            const userResponse = await fetch(
+              `http://localhost:3000/github/${username}`
+            );
             const userData = await userResponse.json();
             if (userResponse.ok) {
               setUserDetails({
-                Name: userData.name || '',
-                GitHubName: userData.login || '',
-                AvatarURL: userData.avatar_url || '',
-                Bio: userData.bio || '',
-                Blog: userData.blog || ''
+                Name: userData.name || "",
+                GitHubName: userData.login || "",
+                AvatarURL: userData.avatar_url || "",
+                Bio: userData.bio || "",
+                Blog: userData.blog || "",
               });
-            
             } else {
               console.error(userData.error || "Failed to fetch user details");
             }
