@@ -22,6 +22,7 @@ export default function Step3() {
     setUserDetails,
     setRepos,
     theme,
+    setTheme,
     email,
     setEmail,
     githubPAT,
@@ -150,6 +151,22 @@ export default function Step3() {
     deployPost(deployData);
   };
 
+  const changeThemeColor = (color) => {
+    switch (color) {
+      case "orange":
+        setTheme({ ...theme, ...{ Primary: "#FDC663" } });
+        break;
+      case "purple":
+        setTheme({ ...theme, ...{ Primary: "#BF27E4" } });
+        break;
+      default:
+        setTheme({ ...theme, ...{ Primary: "#FDC663" } });
+        break;
+    }
+    setSaveBtnDisabled(false);
+    console.log(theme);
+  };
+
   return (
     <>
       <div className="mt-8 flex flex-col lg:flex-row gap-2 lg:gap-4">
@@ -266,7 +283,22 @@ export default function Step3() {
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
-              <AccordionPanel pb={4}></AccordionPanel>
+              <AccordionPanel pb={4}>
+                <ButtonGroup spacing={4}>
+                  <Button
+                    colorScheme="orange"
+                    onClick={() => changeThemeColor("orange")}
+                  >
+                    Orange
+                  </Button>
+                  <Button
+                    colorScheme="purple"
+                    onClick={() => changeThemeColor("purple")}
+                  >
+                    Purple
+                  </Button>
+                </ButtonGroup>
+              </AccordionPanel>
             </AccordionItem>
           </Accordion>
 
