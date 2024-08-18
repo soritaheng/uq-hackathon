@@ -155,6 +155,17 @@ router.get("/:username", async function (req, res, next) {
   }
 });
 
+router.post('/deleteAccessToken', async (req, res) => {
+  const filePath = path.join(__dirname, '/access_token_response.json');
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error deleting the file:', err);
+      return res.status(500).send('Error deleting the file');
+    }
+    res.send('File deleted successfully');
+  });
+});
+
 router.get('/user/emails', async (req, res) => {
   const accessToken = req.query.access_token;
 
