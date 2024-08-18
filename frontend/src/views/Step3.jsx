@@ -160,7 +160,7 @@ export default function Step3() {
         setTheme({ ...theme, ...{ Primary: "#BF27E4" } });
         break;
       default:
-        setTheme({ ...theme, ...{ Primary: "#FDC663" } });
+        setTheme({ ...theme, ...{ Primary: "#3498db" } });
         break;
     }
     setSaveBtnDisabled(false);
@@ -285,6 +285,12 @@ export default function Step3() {
               </h2>
               <AccordionPanel pb={4}>
                 <ButtonGroup spacing={4}>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => changeThemeColor("blue")}
+                  >
+                    Blue
+                  </Button>
                   <Button
                     colorScheme="orange"
                     onClick={() => changeThemeColor("orange")}
