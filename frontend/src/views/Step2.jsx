@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
-  const { repos, setRepos, setCurrentStep, username, setUsername } = useContext(RepoContext);
+  const { repos, setRepos, setCurrentStep, username, setUsername,userDetails,setUserDetails, accessToken, setAccessToken } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
 
@@ -17,7 +18,30 @@ function Step2() {
   useEffect(()=> {
     console.log(username)
     fetchData();
+    fetchAccessToken();
+    fetchUserEmail();
   },[])
+
+  // useEffect(() => {
+  //   if (accessToken) {
+      
+  //   }
+  // }, []);
+
+  const fetchAccessToken = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/code");
+      const data = await response.json();
+  
+      if (response.ok) {
+        setAccessToken(data.access_token);
+      } else {
+        console.error(data.error || "Failed to fetch access token");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
 
   const fetchData = async () => {
     if (!username) {
@@ -54,6 +78,23 @@ function Step2() {
         }
       } else {
         console.error(data.error || "Failed to fetch repositories");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
+
+  const fetchUserEmail = async () => {
+    try {
+
+      const emailResponse = await fetch(`http://localhost:3000/github/user/emails?access_token=${accessToken}`);
+      const emailData = await emailResponse.json();
+
+      if (emailResponse.ok) {
+        // Assuming the primary email is the first one in the array
+        setEmail(emailData[0]?.email || "Email not found");
+      } else {
+        console.error(emailData.error || "Failed to fetch user emails");
       }
     } catch (err) {
       console.error("Internal Server Error", err);
