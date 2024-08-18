@@ -14,15 +14,37 @@ function Step2() {
     setUsername,
     userDetails,
     setUserDetails,
+    accessToken,
+    setAccessToken,
+    email,
+    setEmail,
   } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log(username);
     fetchData();
+    fetchAccessToken();
+    fetchUserEmail();
   }, []);
+
+  const fetchAccessToken = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/code");
+      const data = await response.json();
+
+      if (response.ok) {
+        setAccessToken(data.access_token);
+      } else {
+        console.error(data.error || "Failed to fetch access token");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
 
   const fetchData = async () => {
     if (!username) {
@@ -62,6 +84,24 @@ function Step2() {
         }
       } else {
         console.error(data.error || "Failed to fetch repositories");
+      }
+    } catch (err) {
+      console.error("Internal Server Error", err);
+    }
+  };
+
+  const fetchUserEmail = async () => {
+    try {
+      const emailResponse = await fetch(
+        `http://localhost:3000/github/user/emails?access_token=${accessToken}`
+      );
+      const emailData = await emailResponse.json();
+
+      if (emailResponse.ok) {
+        // Assuming the primary email is the first one in the array
+        setEmail(emailData[0]?.email || "Email not found");
+      } else {
+        console.error(emailData.error || "Failed to fetch user emails");
       }
     } catch (err) {
       console.error("Internal Server Error", err);

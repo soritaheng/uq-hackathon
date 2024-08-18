@@ -30,6 +30,7 @@ function App() {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [accessToken, setAccessToken] = useState("");
+  const [email, setEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -67,6 +68,8 @@ function App() {
         setCurrentStep,
         accessToken,
         setAccessToken,
+        email,
+        setEmail,
       }}
     >
       <Layout>

@@ -15,8 +15,15 @@ import { Select } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 
 export default function Step3() {
-  const { repos, userDetails, setUserDetails, setRepos, theme } =
-    useContext(RepoContext);
+  const {
+    repos,
+    userDetails,
+    setUserDetails,
+    setRepos,
+    theme,
+    email,
+    setEmail,
+  } = useContext(RepoContext);
   const [previewUrl, setPreviewUrl] = useState("");
   const [projectIndex, selectProjectIndex] = useState(0);
   const selectedRepos = repos.filter((repo) => repo.included);
@@ -26,7 +33,6 @@ export default function Step3() {
   const [tempProjectDetails, setTempProjectDetails] = useState(selectedRepos);
 
   useEffect(() => {
-    // Construct the JSON payload
     const jsonPayload = {
       UserDetails: {
         Name: userDetails.Name,
@@ -34,6 +40,7 @@ export default function Step3() {
         AvatarURL: userDetails.AvatarURL,
         Bio: userDetails.Bio,
         Blog: userDetails.Blog,
+        Email: email,
       },
       Projects: repos
         .filter((repo) => repo.included)
@@ -91,6 +98,42 @@ export default function Step3() {
     setUserDetails(tempUserDetails);
     setRepos(tempProjectDetails);
     setSaveBtnDisabled(true);
+  };
+
+  const deployPost = async (deployData) => {
+    try {
+      const response = await fetch("http://localhost:3000/deploy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(deployData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result.data.html_url; // Return the parsed JSON response
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error; // Re-throw the error for further handling if needed
+    }
+  };
+
+  const handleDeployment = async () => {
+    const regexPreviewURL = previewUrl.match(/preview\/(.+)/);
+    const projectID = regexPreviewURL[1];
+    console.log(projectID);
+    const deployData = {
+      GITHUB_API_TOKEN: "API_TOKEN_HERE",
+      GITHUB_USERNAME: userDetails.GitHubName,
+      GITHUB_EMAIL: email,
+      PROJECT_ID: projectID,
+      Name: userDetails.Name,
+    };
+    deployPost(deployData);
   };
 
   return (

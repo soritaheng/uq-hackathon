@@ -119,7 +119,7 @@ router.get('/getAccessToken', async (req, res) => {
         return res.status(500).json({ error: 'Failed to write file' });
       }
       console.log('Response data saved to', filePath);
-      res.json(data);
+      res.json("You are now authorised. Please close this window.");
     });
   } catch (error) {
     console.error('Error during the request:', error);
@@ -152,6 +152,41 @@ router.get("/:username", async function (req, res, next) {
   } catch (error) {
     console.error("Error:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post('/deleteAccessToken', async (req, res) => {
+  const filePath = path.join(__dirname, '/access_token_response.json');
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error deleting the file:', err);
+      return res.status(500).send('Error deleting the file');
+    }
+    res.send('File deleted successfully');
+  });
+});
+
+router.get('/user/emails', async (req, res) => {
+  const accessToken = req.query.access_token;
+
+  try {
+    const response = await fetch('https://api.github.com/user/emails', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return res.status(response.status).json({ error: 'Failed to retrieve emails' });
+    }
+
+    const emails = await response.json();
+    res.status(200).json(emails);
+  } catch (error) {
+    console.error('Error fetching user emails:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
