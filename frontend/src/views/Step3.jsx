@@ -25,8 +25,7 @@ export default function Step3() {
   const [tempProjectDetails, setTempProjectDetails] = useState(selectedRepos);
 
   useEffect(() => {
-    // Construct the JSON payload
-    console.log(email)
+    
     const jsonPayload = {
       UserDetails: {
         Name: userDetails.Name,
@@ -126,7 +125,7 @@ export default function Step3() {
     const deployData = {
       GITHUB_API_TOKEN: "API_TOKEN_HERE",
       GITHUB_USERNAME: userDetails.GitHubName,
-      GITHUB_EMAIL: "EMAIL_HERE",
+      GITHUB_EMAIL: email,
       PROJECT_ID: projectID,
       Name: userDetails.Name,
     };
