@@ -119,7 +119,7 @@ router.get('/getAccessToken', async (req, res) => {
         return res.status(500).json({ error: 'Failed to write file' });
       }
       console.log('Response data saved to', filePath);
-      res.json(data);
+      res.json("You are now authorised. Please close this window.");
     });
   } catch (error) {
     console.error('Error during the request:', error);

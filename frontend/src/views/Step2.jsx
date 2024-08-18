@@ -6,14 +6,12 @@ import { useNavigate } from "react-router-dom";
 import ButtonPrimary from "../components/ButtonPrimary";
 
 function Step2() {
+  
   const { repos, setRepos, setCurrentStep, username, setUsername,userDetails,setUserDetails, accessToken, setAccessToken, email, setEmail } = useContext(RepoContext);
   const [checkedItems, setCheckedItems] = useState([]);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-
-
-  
 
   useEffect(()=> {
     console.log(username)
@@ -62,7 +60,6 @@ function Step2() {
                 Bio: userData.bio || '',
                 Blog: userData.blog || ''
               });
-            
             } else {
               console.error(userData.error || "Failed to fetch user details");
             }

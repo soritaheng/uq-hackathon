@@ -94,6 +94,45 @@ export default function Step3() {
     setSaveBtnDisabled(true);
   };
 
+  const deployPost = async (deployData) => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/deploy",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(deployData),
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      return result.data.html_url;  // Return the parsed JSON response
+    } catch (error) {
+      console.error("An error occurred:", error);
+      throw error;  // Re-throw the error for further handling if needed
+    }
+  };
+
+  const handleDeployment = async () => {
+    const regexPreviewURL = previewUrl.match(/preview\/(.+)/);
+    const projectID = regexPreviewURL[1]
+    console.log(projectID)
+    const deployData = {
+      GITHUB_API_TOKEN: "API_TOKEN_HERE",
+      GITHUB_USERNAME: userDetails.GitHubName,
+      GITHUB_EMAIL: "EMAIL_HERE",
+      PROJECT_ID: projectID,
+      Name: userDetails.Name,
+    };
+    deployPost(deployData); 
+  };
+
   return (
     <div>
       {previewUrl ? (
@@ -218,7 +257,7 @@ export default function Step3() {
         <ButtonPrimary
           isDisabled={deployBtnDisabled}
           label={"Deploy"}
-          eventHandler={() => alert("hola")}
+          eventHandler={handleDeployment}
         ></ButtonPrimary>
       </div>
     </div>
